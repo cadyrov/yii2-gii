@@ -1,0 +1,29 @@
+{
+    "name": "cadyrov/yii2-gii",
+    "description": "адаптированый gii",
+    "type": "library",
+    "keywords": ["yii2","lib"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "cadyrov",
+            "email": "cadyrov@gmail.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "~2.0.0",
+        "kartik-v/yii2-widgets": "*",
+        "moonlandsoft/yii2-phpexcel": "*",
+        "budyaga/yii2-cropper": "*",
+        "budyaga/yii2-users": "*",
+        "myclabs/deep-copy": "^1.8",
+        "mpdf/mpdf": "^7.1",
+        "roopz/yii2-imap": "dev-master",
+        "vkcom/vk-php-sdk": "^0.2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "cadyrov\\gii\\": ""
+        }
+    }
+}
