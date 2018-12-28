@@ -4,6 +4,7 @@
     "type": "library",
     "keywords": ["yii2","lib"],
     "license": "MIT",
+    "minimum-stability": "stable",
     "authors": [
         {
             "name": "cadyrov",
