@@ -19,7 +19,6 @@
         "budyaga/yii2-users": "*",
         "myclabs/deep-copy": "^1.8",
         "mpdf/mpdf": "^7.1",
-        "roopz/yii2-imap": "dev-master",
         "vkcom/vk-php-sdk": "^0.2.0"
     },
     "autoload": {
