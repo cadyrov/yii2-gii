@@ -1,6 +1,6 @@
-измененный gii
+yii2-gii alternative
 ==============
-адаптированый gii
+
 
 Installation
 ------------
