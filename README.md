@@ -25,4 +25,21 @@ to the require section of your `composer.json` file.
 Usage
 -----
 
-Once the extension is installed, simply use it in your code by  :
+Once the extension is installed, simply use it in your web.php like this
+
+```
+'generators' => [
+            'crud' => [
+                'class' => 'cadyrov\gii\crud\Generator',
+                'templates' => [
+                    'crud' => 'cadyrov/gii/crud/default',
+                ]
+            ],
+            'model' => [
+                'class' => 'cadyrov\gii\model\Generator',
+                'templates' => [
+                    'model' => 'cadyrov/gii/model/default',
+                ]
+            ]
+        ],
+```
