@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace app\support\gii\crud;
+namespace cadyrov\gii\crud;
 
 use Yii;
 use yii\db\ActiveRecord;

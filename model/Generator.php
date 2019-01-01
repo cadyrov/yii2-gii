@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace app\support\gii\model;
+namespace cadyrov\gii\model;
 
 use Yii;
 use yii\db\ActiveQuery;
