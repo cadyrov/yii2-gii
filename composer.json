@@ -1,6 +1,6 @@
 {
     "name": "cadyrov/yii2-gii",
-    "description": "адаптированый gii",
+    "description": "yii2-gii alternative",
     "type": "library",
     "keywords": ["yii2","lib"],
     "license": "MIT",

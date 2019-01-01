@@ -1,7 +1,6 @@
 yii2-gii alternative
 ==============
 
-
 Installation
 ------------
 
