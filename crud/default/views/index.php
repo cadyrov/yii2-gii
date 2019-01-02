@@ -19,6 +19,7 @@ use yii\widgets\ActiveForm;
 use budyaga\users\models\User;
 use yii\helpers\ArrayHelper;
 use kartik\datetime\DateTimePicker;
+use kartik\widgets\FileInput;
 use <?= $generator->indexWidgetType === 'grid' ? "yii\\grid\\GridView" : "yii\\widgets\\ListView" ?>;
 <?= $generator->enablePjax ? 'use yii\widgets\Pjax;' : '' ?>
 
@@ -45,37 +46,52 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
     <p>
+		<div class = "col-lg-12">
+			<div class = "col-lg-1">
         <?= "<?php " ?>echo Html::a('Добавить', ['#'], [
                         'class' => 'btn btn-success',
                         'data-target' => '#add<?= $pth?>',
 						'data-toggle' => 'modal',
 						'title' => 'Добавить',
                     ]);
+			echo '</div><div class = "col-lg-1">';
 
-		echo Html::a('', ['/<?= $pth?>/download/'], [
+			echo Html::a('', ['/<?= $pth?>/download/'], [
                         'class' => 'glyphicon glyphicon-download',
                         'data-target' => '#down<?= $pth?>',
 						'data-toggle' => 'tooltip',
 						'data-pjax' => '0',
 						'title' => 'Скачать',
                     ]);
-
-	    $form = ActiveForm::begin([
-			'action' =>['/<?= $pth?>/upload/'],
-			'options' => ['enctype' => 'multipart/form-data','class' => 'form-inline']
-		]);
-		echo $form->field($upload, 'file')->fileInput()->label('Файл');
-        echo Html::submitButton(
-		    'Загрузить',
-			[
-			    'class' => 'glyphicon glyphicon-upload',
-				'name' => 'add-button',
-				'style'=>'margin-top:10px;',
-				'data-toggle' => 'tooltip',
-				'title' => 'Загрузить xsl поля (<?= $fields ?>)',
-			]
-		);
-		ActiveForm::end(); ?>
+			echo '</div><div class = "col-lg-3">';
+			$form = ActiveForm::begin([
+				'action' =>['/<?= $pth?>/upload/'],
+				'options' => ['enctype' => 'multipart/form-data','class' => 'form-inline']
+			]);
+			echo FileInput::widget([
+				'model' => $upload,
+				'attribute' => 'file',
+				'options' => ['multiple' => false],
+				'pluginOptions' => [
+					'showPreview' => false,
+					'showCaption' => true,
+					'showRemove' => true,
+					'showUpload' => false
+				]
+			]);
+			echo '</div><div class = "col-lg-1">';
+			echo Html::submitButton(
+					'Загрузить',
+					[
+						'class' => 'btn btn-success glyphicon glyphicon-upload',
+						'name' => 'add-button',
+						'data-toggle' => 'tooltip',
+						'title' => 'Загрузить xsl поля (<?= $fields ?>)',
+					]
+				);
+			ActiveForm::end(); ?>
+			</div>
+		</div>
     </p>
 
 
