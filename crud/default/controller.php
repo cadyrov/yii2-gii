@@ -135,7 +135,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 			foreach ($tableSchema->columns as $column) {
 				if ($column->type === 'datetime') {
 					echo 'if ($model->'.$column->name.') {';
-						echo '$model->'.$column->name.' = date("d.m.Y H:i",strtotime($model->'.$column->name.'));';
+						echo '$model->'.$column->name.' = date("Y-m-d H:i:s",strtotime($model->'.$column->name.'));';
 					echo '}';
 				}
 			}
