@@ -158,6 +158,15 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         $model = $this->findModel(<?= $actionParams ?>);
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+			<?php
+			foreach ($tableSchema->columns as $column) {
+				if ($column->type === 'datetime') {
+					echo 'if ($model->'.$column->name.') {';
+						echo '$model->'.$column->name.' = date("Y-m-d H:i:s",strtotime($model->'.$column->name.'));';
+					echo '}';
+				}
+			}
+			?>
             $model->save();
         }
 
@@ -303,6 +312,15 @@ if (count($pks) === 1) {
                 }
                 $model->setAttributes($v);
                 if ($model->validate()) {
+					<?php
+					foreach ($tableSchema->columns as $column) {
+						if ($column->type === 'datetime') {
+							echo 'if ($model->'.$column->name.') {';
+								echo '$model->'.$column->name.' = date("Y-m-d H:i:s",strtotime($model->'.$column->name.'));';
+							echo '}';
+						}
+					}
+					?>
                     $model->save();
                 } else {
                     return (serialize($model->getErrors()));
