@@ -203,9 +203,20 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
         </button>
       </div>
       <div class="modal-body">
-            <?= "<?= " ?>$this->render('_form', [
-                'model' => $model,
-            ]) ?>
+        <?= "<?php " ?>$form = ActiveForm::begin([
+				'action' => ['/<?= $pth?>/create/'],
+				'id' => 'add-<?= $pth?>'
+			]); ?>
+		<?php foreach ($generator->getColumnNames() as $attribute) {
+			if (in_array($attribute, $safeAttributes)) {
+				echo "    <?= " . $generator->generateActiveField($attribute) . " ?>\n\n";
+			}
+		} ?>
+		<div class="form-group">
+			<?= "<?= " ?>Html::submitButton(<?= $generator->generateString('Добавить') ?>, ['class' => 'btn btn-success']) ?>
+		</div>
+
+		<?= "<?php " ?>ActiveForm::end(); ?>
       </div>
     </div>
   </div>
