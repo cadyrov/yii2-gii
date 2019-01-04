@@ -16,6 +16,7 @@ $searchModelClass = StringHelper::basename($generator->searchModelClass);
 if ($modelClass === $searchModelClass) {
     $searchModelAlias = $searchModelClass . 'Search';
 }
+$tableSchema = $generator->getTableSchema();
 
 /* @var $class ActiveRecordInterface */
 $class = $generator->modelClass;
@@ -130,6 +131,15 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         $model = new <?= $modelClass ?>();
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+			<?php
+			foreach ($tableSchema->columns as $column) {
+				if ($column->type === 'datetime') {
+					echo 'if ($model->'.$column->name.') {';
+						echo '$model->'.$column->name.' = date("d.m.Y H:i",strtotime($model->'.$column->name.']));';
+					echo '}';
+				}
+			}
+			?>
             $model->save();
         }
 

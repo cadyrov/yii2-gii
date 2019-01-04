@@ -108,6 +108,8 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
     foreach ($generator->getColumnNames() as $name) {
         echo '
             [
+				\'label\' => \''.$column->name.'\',
+				\'attribute\' => \''.$column->name.'\',
                 \'format\' => \'raw\',
                 \'value\'=>function ($data){
                     return $data[\''.$column->name.'\'];
@@ -119,6 +121,8 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
     foreach ($tableSchema->columns as $column) {
         echo '
             [
+				\'label\' => \''.$column->name.'\',
+				\'attribute\' => \''.$column->name.'\',
                 \'format\' => \'raw\',
                 \'value\'=>function ($data){';
                     if ($column->type === 'datetime') {
