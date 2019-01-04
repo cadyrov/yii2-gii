@@ -207,7 +207,13 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
 				'action' => ['/<?= $pth?>/create/'],
 				'id' => 'add-<?= $pth?>'
 			]); ?>
-		<?php foreach ($generator->getColumnNames() as $attribute) {
+		<?php
+		$model = new $generator->modelClass();
+		$safeAttributes = $model->safeAttributes();
+		if (empty($safeAttributes)) {
+			$safeAttributes = $model->attributes();
+		}
+		foreach ($generator->getColumnNames() as $attribute) {
 			if (in_array($attribute, $safeAttributes)) {
 				echo "    <?= " . $generator->generateActiveField($attribute) . " ?>\n\n";
 			}
