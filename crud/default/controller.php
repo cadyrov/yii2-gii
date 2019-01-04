@@ -219,7 +219,8 @@ if (count($pks) === 1) {
         ?>
 
 		return Excel::export([
-            'format' => 'Excel5',
+            'format' => 'Xlsx',
+			'asAttachment' => true,
             'fileName' => $table,
             'models' => $resarr,
             'columns' => <?= $columns?>,
@@ -283,7 +284,7 @@ if (count($pks) === 1) {
 
     private function updateRecord($v){
 		$res = "";
-        if ($v != null) {
+        if ($v != null && is_array($v)) {
             $isset = $this->issetParams($v);
             if ($isset == self::RES_TRUE) {
                 $model = <?= $modelClass ?>::findOne($v['<?= $pks[0]?>']);
