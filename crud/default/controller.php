@@ -40,7 +40,7 @@ use yii\data\ActiveDataProvider;
 use <?= ltrim($generator->baseControllerClass, '\\') ?>;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use app\support\models\Upload;
+use cadyrov\gii\Upload;
 use yii\filters\AccessControl;
 use moonland\phpexcel\Excel;
 use yii\db\Query;
@@ -83,12 +83,11 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
      */
     public function actionIndex()
     {
+		$model = new <?= $modelClass ?>();
+        $upload = new Upload();
 <?php if (!empty($generator->searchModelClass)): ?>
         $searchModel = new <?= isset($searchModelAlias) ? $searchModelAlias : $searchModelClass ?>();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $model = new <?= $modelClass ?>();
-        $upload = new Upload();
-
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -226,14 +225,19 @@ if (count($pks) === 1) {
 
         <?php
             $columns = "[";
+			$nonPrivateColumns = "[";
             $headers = "[";
             $tableSchema = $generator->getTableSchema();
             foreach ($tableSchema->columns as $column) {
                 $columns .= '\'' . $column->name .'\', ';
                 $headers .= '\'' . $column->name .'\' ' . " => " . '\'' . $column->name .'\', ';
+				if ($column->name != $pks[0]) {
+					$nonPrivateColumns .= '\'' . $column->name .'\', ';
+				}
 
             }
-            $columns .= "]";
+			$columns .= "]";
+			$nonPrivateColumns = "]";
             $headers .= "]";
         ?>
 
