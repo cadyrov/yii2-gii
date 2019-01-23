@@ -27,18 +27,23 @@ Usage
 Once the extension is installed, simply use it in your web.php like this
 
 ```
-'generators' => [
-            'crud' => [
-                'class' => 'cadyrov\gii\crud\Generator',
+$config['modules']['gii'] = [
+    'class' => 'yii\gii\Module',
+    // uncomment the following to add your IP if you are not connecting from localhost.
+    //'allowedIPs' => ['127.0.0.1', '::1'],
+    'generators' => [
+        'crud' => [
+            'class' => 'cadyrov\gii\crud\Generator',
                 'templates' => [
-                    'crud' => 'cadyrov/gii/crud/default',
-                ]
-            ],
-            'model' => [
-                'class' => 'cadyrov\gii\model\Generator',
-                'templates' => [
-                    'model' => 'cadyrov/gii/model/default',
-                ]
+                'crud' => 'cadyrov/gii/crud/default',
             ]
         ],
+        'model' => [
+            'class' => 'cadyrov\gii\model\Generator',
+            'templates' => [
+                'model' => 'cadyrov/gii/model/default',
+            ]
+        ]
+    ],
+];
 ```
