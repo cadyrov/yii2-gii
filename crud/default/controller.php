@@ -46,9 +46,6 @@ use moonland\phpexcel\Excel;
 use yii\db\Query;
 use yii\web\UploadedFile;
 
-/**
- * <?= $controllerClass ?> implements the CRUD actions for <?= $modelClass ?> model.
- */
 class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->baseControllerClass) . "\n" ?>
 {
     const RES_TRUE = 10;
@@ -57,9 +54,6 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 
     private $error=[];
 
-    /**
-     * @inheritdoc
-     */
     public function behaviors()
     {
         return [
@@ -77,10 +71,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         ];
     }
 
-    /**
-     * Lists all <?= $modelClass ?> models.
-     * @return mixed
-     */
+
     public function actionIndex()
     {
 		$model = new <?= $modelClass ?>();
@@ -107,12 +98,6 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 <?php endif; ?>
     }
 
-    /**
-     * Displays a single <?= $modelClass ?> model.
-     * <?= implode("\n     * ", $actionParamComments) . "\n" ?>
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionView(<?= $actionParams ?>)
     {
         return $this->render('view', [
@@ -120,11 +105,6 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         ]);
     }
 
-    /**
-     * Creates a new <?= $modelClass ?> model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
     public function actionCreate()
     {
         $model = new <?= $modelClass ?>();
@@ -145,13 +125,6 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         return $this->redirect(['index']);
     }
 
-    /**
-     * Updates an existing <?= $modelClass ?> model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * <?= implode("\n     * ", $actionParamComments) . "\n" ?>
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionUpdate(<?= $actionParams ?>)
     {
         $model = $this->findModel(<?= $actionParams ?>);
@@ -167,18 +140,14 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 			}
 			?>
             $model->save();
+			return $this->redirect(['index']);
         }
+		return $this->render('update', [
+            'model' => $model,
+        ]);
 
-        return $this->redirect(['index']);
     }
 
-    /**
-     * Deletes an existing <?= $modelClass ?> model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * <?= implode("\n     * ", $actionParamComments) . "\n" ?>
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionDelete(<?= $actionParams ?>)
     {
         $this->findModel(<?= $actionParams ?>)->delete();
@@ -186,13 +155,6 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         return $this->redirect(['index']);
     }
 
-    /**
-     * Finds the <?= $modelClass ?> model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * <?= implode("\n     * ", $actionParamComments) . "\n" ?>
-     * @return <?=                   $modelClass ?> the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel(<?= $actionParams ?>)
     {
 <?php
@@ -212,7 +174,6 @@ if (count($pks) === 1) {
 
         throw new NotFoundHttpException(<?= $generator->generateString('The requested page does not exist.') ?>);
     }
-
 
     public function actionDownload()
     {
