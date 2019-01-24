@@ -1,7 +1,6 @@
 <?php
+namespace cadyrov\gii;
 
-namespace cadyrov\gii
-;
 use yii\db\ActiveRecord;
 use yii\base\Model;
 
