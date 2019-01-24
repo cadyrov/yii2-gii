@@ -14,4 +14,5 @@ class Upload extends Model{
 			[['file'], 'required', 'message' => 'Передайте файл'],
         ];
 	}
+
 }
