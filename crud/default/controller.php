@@ -24,6 +24,7 @@ $pks = $class::primaryKey();
 $urlParams = $generator->generateUrlParams();
 $actionParams = $generator->generateActionParams();
 $actionParamComments = $generator->generateActionParamComments();
+$pth = mb_strtolower(StringHelper::basename($generator->modelClass));
 
 echo "<?php\n";
 ?>
@@ -64,7 +65,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
                     [
                         'actions' => ['index','view','create','delete','update','download','upload'],
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => ['<?= $pth?>'],
                     ],
                 ],
             ],
