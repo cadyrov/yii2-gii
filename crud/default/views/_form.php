@@ -36,7 +36,7 @@ use kartik\date\DatePicker;
     }
 } ?>
     <div class="form-group">
-        <?= "<?= " ?>Html::submitButton(<?= $generator->generateString('Добавить') ?>, ['class' => 'btn btn-success']) ?>
+        <?= "<?= " ?>Html::submitButton(<?= $generator->generateString('Записать') ?>, ['class' => 'btn btn-success']) ?>
     </div>
 
     <?= "<?php " ?>ActiveForm::end(); ?>
