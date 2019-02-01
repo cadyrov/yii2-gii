@@ -20,51 +20,28 @@ echo "<?php\n";
 namespace <?= $generator->ns ?>;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
-/**
- * This is the model class for table "<?= $generator->generateTableName($tableName) ?>".
- *
-<?php foreach ($properties as $property => $data): ?>
- * @property <?= "{$data['type']} \${$property}"  . ($data['comment'] ? ' ' . strtr($data['comment'], ["\n" => ' ']) : '') . "\n" ?>
-<?php endforeach; ?>
-<?php if (!empty($relations)): ?>
- *
-<?php foreach ($relations as $name => $relation): ?>
- * @property <?= $relation[1] . ($relation[2] ? '[]' : '') . ' $' . lcfirst($name) . "\n" ?>
-<?php endforeach; ?>
-<?php endif; ?>
- */
 class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . "\n" ?>
 {
-    /**
-     * @inheritdoc
-     */
+
     public static function tableName()
     {
         return '<?= $generator->generateTableName($tableName) ?>';
     }
 <?php if ($generator->db !== 'db'): ?>
 
-    /**
-     * @return \yii\db\Connection the database connection used by this AR class.
-     */
     public static function getDb()
     {
         return Yii::$app->get('<?= $generator->db ?>');
     }
 <?php endif; ?>
 
-    /**
-     * @inheritdoc
-     */
     public function rules()
     {
         return [<?= empty($rules) ? '' : ("\n            " . implode(",\n            ", $rules) . ",\n        ") ?>];
     }
 
-    /**
-     * @inheritdoc
-     */
     public function attributeLabels()
     {
         return [
@@ -75,9 +52,6 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
     }
 <?php foreach ($relations as $name => $relation): ?>
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     public function get<?= $name ?>()
     {
         <?= $relation[0] . "\n" ?>
@@ -88,13 +62,59 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
     $queryClassFullName = ($generator->ns === $generator->queryNs) ? $queryClassName : '\\' . $generator->queryNs . '\\' . $queryClassName;
     echo "\n";
 ?>
-    /**
-     * @inheritdoc
-     * @return <?= $queryClassFullName ?> the active query used by this AR class.
-     */
+
     public static function find()
     {
         return new <?= $queryClassFullName ?>(get_called_class());
     }
 <?php endif; ?>
+
+/**
+    const TYPE_A;
+    const TYPE_B;
+
+    public static function getTypeArray()
+    {
+        return [
+            self::TYPE_A,
+            self::TYPE_B,
+        ];
+    }
+
+    public static function getTypeMap()
+    {
+        $map = [
+            ['id' => self::TYPE_A, 'name' => 'A'],
+            ['id' => self::TYPE_B, 'name' => 'B'],
+        ];
+        return $map;
+    }
+
+    public static function getTipeById($id)
+    {
+        return ArrayHelper::getValue($id,self::getTypeMap());
+    }
+
+    public static function getXXXMap($id)
+    {
+        return ArrayHelper::map(self::query(), 'id', 'name');
+    }
+
+    //rule custom
+    ['type', 'in', 'range' => self::getTypeArray()],
+    [['a', 'b'], 'required', 'when' => function ($data) {
+        if ($data->a == null && $data->b == null && $data->tnved == null) {
+            return true;
+        }
+        return false;
+    }, 'whenClient' => "function (attribute, value) {
+        return $('#a').val() == '' && $('#b').val() == '';
+    }", 'message' => 'Необходимо заполнить хотя бы одно из полей a, b],
+
+*/
+
+
+
+
+
 }
