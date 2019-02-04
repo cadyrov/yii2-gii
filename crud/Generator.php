@@ -16,7 +16,6 @@ use yii\helpers\Inflector;
 use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\helpers\StringHelper;
-use budyaga\users\models\AuthItem;
 
 /**
  * Generates CRUD
@@ -185,13 +184,6 @@ class Generator extends \yii\gii\Generator
                 $files[] = new CodeFile("$viewPath/$file", $this->render("views/$file"));
             }
         }
-
-        $rulename = mb_strtolower(StringHelper::basename($this->modelClass));
-        $au = new AuthItem();
-        $au->name = $rulename;
-        $au->type = 2;
-        $au->description = 'access to ' . $rulename;
-        $au->save();
 
         return $files;
     }

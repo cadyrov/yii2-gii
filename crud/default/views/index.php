@@ -138,8 +138,8 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
 
             [
 				'format' => 'raw',
-				'value'=>function ($data){
-					return Html::a(
+				'value' => function ($data){
+					$res = Html::a(
                         '',
                         ['/<?= $pth?>/view', 'id' => $data['<?=$pk[0]?>']],
                         [
@@ -148,13 +148,14 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
 							'title' => 'Просмотр',
 						]
                     );
+					return (Yii::$app->user->can('') ? $res : '');
 				},
 			],
 
             [
 				'format' => 'raw',
-				'value'=>function ($data){
-					return Html::a(
+				'value' => function ($data){
+					$res = Html::a(
                         '',
                         ['/<?= $pth?>/update', 'id' => $data['<?=$pk[0]?>']],
                         [
@@ -163,13 +164,14 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
 							'title' => 'Изменить',
 						]
                     );
+					return (Yii::$app->user->can('') ? $res : '');
 				},
 			],
 
             [
 				'format' => 'raw',
-				'value'=>function ($data){
-					return Html::a(
+				'value' => function ($data){
+					$res = Html::a(
                         '',
                         ['/<?= $pth?>/delete', 'id' => $data['<?=$pk[0]?>']],
                         [
@@ -179,6 +181,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
 							'title' => 'Удалить',
 						]
                     );
+					return (Yii::$app->user->can('') ? $res : '');
 				},
 			],
         ],
