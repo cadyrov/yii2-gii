@@ -18,7 +18,7 @@ use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model <?= ltrim($generator->modelClass, '\\') ?> */
-$pth = mb_strtolower(StringHelper::basename($generator->modelClass));
+$cname = mb_strtolower(StringHelper::basename($generator->modelClass));
 $this->title = $model-><?= $generator->getNameAttribute() ?>;
 ?>
 <div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-view">
@@ -26,7 +26,7 @@ $this->title = $model-><?= $generator->getNameAttribute() ?>;
     <h1><?= "<?= " ?>Html::encode($this->title) ?></h1>
 
             $form = ActiveForm::begin([
-				'action' =>['/<?= $pth?>/upload/'],
+				'action' =>['/<?= $cname?>/upload/'],
 				'options' => ['enctype' => 'multipart/form-data','class' => 'form-inline']
 			]);
 			echo Html::fileInput('Upload[file]', null);
