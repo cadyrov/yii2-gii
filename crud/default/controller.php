@@ -341,7 +341,7 @@ if (count($pks) === 1) {
 			$fl = new File();
 			$fl->user_id = Yii::$app->user->identity->id;
 			$fl->add_date = date ("Y-m-d H:i:s");
-			$fl->owner_id = <?= $owner?>-><?= $pks[0]?>;
+			$fl->owner_id = $owner-><?= $pks[0]?>;
 			$fl->name = $model->file->name;
 			$fl->ext = $model->file->extension;
 			if ($fl->validate()) {
@@ -350,7 +350,7 @@ if (count($pks) === 1) {
 					$fl->delete();
 				}
 			}
-			return $this->redirect(['view', 'id' => '<?= $owner?>-><?= $pks[0]?>');
+			return $this->redirect(['view', 'id' => '$owner-><?= $pks[0]?>');
         }
     }
 
