@@ -7,7 +7,7 @@ use yii\helpers\StringHelper;
 /* @var $generator yii\gii\generators\crud\Generator */
 
 $urlParams = $generator->generateUrlParams();
-
+$cname = mb_strtolower(StringHelper::basename($generator->modelClass));
 echo "<?php\n";
 ?>
 
@@ -18,7 +18,7 @@ use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model <?= ltrim($generator->modelClass, '\\') ?> */
-$cname = mb_strtolower(StringHelper::basename($generator->modelClass));
+
 $this->title = $model-><?= $generator->getNameAttribute() ?>;
 ?>
 <div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-view">
