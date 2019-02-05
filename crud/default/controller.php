@@ -42,6 +42,7 @@ use <?= ltrim($generator->baseControllerClass, '\\') ?>;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use cadyrov\gii\Upload;
+use cadyrov\gii\File;
 use yii\filters\AccessControl;
 use moonland\phpexcel\Excel;
 use yii\db\Query;
@@ -60,7 +61,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['index','view','create','delete','update','download','upload'],
+                'only' => ['index','view','create','delete','update','downloadlist','uploadlist','download','upload'],
                 'rules' => [
                     [
                         'actions' => ['index','view','create','delete','update','download','upload'],
@@ -176,7 +177,7 @@ if (count($pks) === 1) {
         throw new NotFoundHttpException(<?= $generator->generateString('The requested page does not exist.') ?>);
     }
 
-    public function actionDownload()
+    public function actionDownloadlist()
     {
         $table = <?= $modelClass ?>::tableName();
 		ob_end_clean();
@@ -213,7 +214,7 @@ if (count($pks) === 1) {
         ]);
     }
 
-    public function actionUpload()
+    public function actionUploadlist()
     {
         set_time_limit(5000);
         $model = new Upload();
@@ -323,5 +324,64 @@ if (count($pks) === 1) {
 		}
 
 		return $result;
+	}
+
+
+	public function actionUpload()
+	{
+        $model = new Upload();
+		$id = Yii::$app->request->post('<?= $pks[0]?>');
+		$owner = <?=$modelClass?>->findOne($id);
+        if (Yii::$app->request->isPost && $owner != null) {
+			$model->load(Yii::$app->request->post());
+            $model->file = UploadedFile::getInstance($model, 'file');
+			if(!$model->validate()){
+				//error code
+            }
+			$fl = new File();
+			$fl->user_id = Yii::$app->user->identity->id;
+			$fl->add_date = date ("Y-m-d H:i:s");
+			$fl->owner_id = <?= $owner?>-><?= $pks[0]?>;
+			$fl->name = $model->file->name;
+			$fl->ext = $model->file->extension;
+			if ($fl->validate()) {
+				$fl->save();
+				if(!$fll->saveAs('path'.$fl->file_id)){
+					$fl->delete();
+				}
+			}
+			return $this->redirect(['view', 'id' => '<?= $owner?>-><?= $pks[0]?>');
+        }
+    }
+
+	public function actionDownload()
+	{
+		if(Yii::$app->request->post('file_id')){
+			$fl=File::findOne(Yii::$app->request->post('file_id'));
+			if($fl!=null){
+				$path='path'.$fl->file_id;
+				if (file_exists($path)) {
+					if (ob_get_level()) {
+					  ob_end_clean();
+					}
+					header('Content-Description: File Transfer');
+					header('Content-Type: application/octet-stream');
+					header('Content-Disposition: attachment; filename=' .$fl->name);
+					header('Content-Transfer-Encoding: binary');
+					header('Expires: 0');
+					header('Cache-Control: must-revalidate');
+					header('Pragma: public');
+					header('Content-Length: ' . filesize($path));
+					readfile($path);
+					exit;
+				}else{
+					print_r('Файла не существует в хранилище');
+				}
+			}else{
+				print_r('Файл не найден в таблице');
+			}
+		}else{
+			print_r('Не передан ид файла');
+		}
 	}
 }

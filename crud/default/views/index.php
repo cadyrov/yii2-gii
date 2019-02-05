@@ -55,7 +55,7 @@ $this->title = <?= $generator->generateString(Inflector::pluralize(Inflector::ca
                     ]);
 			echo '</div><div class = "col-lg-1">';
 
-			echo Html::a('', ['/<?= $pth?>/download/'], [
+			echo Html::a('', ['/<?= $pth?>/downloadlist/'], [
                         'class' => 'glyphicon glyphicon-download',
                         'data-target' => '#down<?= $pth?>',
 						'data-toggle' => 'tooltip',
@@ -64,7 +64,7 @@ $this->title = <?= $generator->generateString(Inflector::pluralize(Inflector::ca
                     ]);
 			echo '</div><div class = "col-lg-3">';
 			$form = ActiveForm::begin([
-				'action' =>['/<?= $pth?>/upload/'],
+				'action' =>['/<?= $pth?>/uploadlist/'],
 				'options' => ['enctype' => 'multipart/form-data','class' => 'form-inline']
 			]);
 			echo FileInput::widget([
