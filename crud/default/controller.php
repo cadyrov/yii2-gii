@@ -331,25 +331,26 @@ if (count($pks) === 1) {
 	{
         $model = new Upload();
 		$id = Yii::$app->request->post('<?= $pks[0]?>');
-		$owner = <?=$modelClass?>->findOne($id);
+		$owner = <?=$modelClass?>::findOne($id);
         if (Yii::$app->request->isPost && $owner != null) {
 			$model->load(Yii::$app->request->post());
             $model->file = UploadedFile::getInstance($model, 'file');
-			if(!$model->validate()){
+			if($model->validate()){
+				$fl = new File();
+				$fl->user_id = Yii::$app->user->identity->id;
+				$fl->add_date = date ("Y-m-d H:i:s");
+				$fl->owner_id = $owner-><?= $pks[0]?>;
+				$fl->name = $model->file->name;
+				$fl->ext = $model->file->extension;
+				if ($fl->validate()) {
+					$fl->save();
+					if(!$fll->saveAs('path'.$fl->file_id)){
+						$fl->delete();
+					}
+				}
+			} else {
 				//error code
             }
-			$fl = new File();
-			$fl->user_id = Yii::$app->user->identity->id;
-			$fl->add_date = date ("Y-m-d H:i:s");
-			$fl->owner_id = $owner-><?= $pks[0]?>;
-			$fl->name = $model->file->name;
-			$fl->ext = $model->file->extension;
-			if ($fl->validate()) {
-				$fl->save();
-				if(!$fll->saveAs('path'.$fl->file_id)){
-					$fl->delete();
-				}
-			}
 			return $this->redirect(['view', 'id' => '$owner-><?= $pks[0]?>');
         }
     }
