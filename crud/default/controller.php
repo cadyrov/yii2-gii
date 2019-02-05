@@ -351,7 +351,7 @@ if (count($pks) === 1) {
 			} else {
 				//error code
             }
-			return $this->redirect(['view', 'id' => '$owner-><?= $pks[0]?>');
+			return $this->redirect(['view', 'id' => '$owner-><?= $pks[0]?>']);
         }
     }
 
