@@ -123,7 +123,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
 				\'label\' => \''.$column->name.'\',
 				\'attribute\' => \''.$column->name.'\',
                 \'format\' => \'raw\',
-                \'value\'=>function ($data){';
+                \'value\' => function ($data) {';
                     if ($column->type === 'datetime') {
                         echo 'return ($data[\''.$column->name.'\']!=null?date("d.m.Y H:i",strtotime($data[\''.$column->name.'\'])):null);';
                     }else{
