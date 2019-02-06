@@ -5,7 +5,7 @@ use yii\db\Migration;
 /**
  * Class m190201_115659_add_table_files
  */
-class m190201_115659_add_table_contact extends Migration
+class m190201_115559_add_table_files extends Migration
 {
     /**
      * {@inheritdoc}
