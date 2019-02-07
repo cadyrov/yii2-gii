@@ -26,19 +26,9 @@ use kartik\date\DatePicker;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-form">
-
-    <?= "<?php " ?>$form = ActiveForm::begin(); ?>
-
 <?php foreach ($generator->getColumnNames() as $attribute) {
     if (in_array($attribute, $safeAttributes)) {
         echo "    <?= " . $generator->generateActiveField($attribute) . " ?>\n\n";
     }
 } ?>
-    <div class="form-group">
-        <?= "<?= " ?>Html::submitButton(<?= $generator->generateString('Записать') ?>, ['class' => 'btn btn-success']) ?>
-    </div>
 
-    <?= "<?php " ?>ActiveForm::end(); ?>
-
-</div>

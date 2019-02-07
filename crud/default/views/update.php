@@ -20,8 +20,16 @@ use kartik\datetime\DateTimePicker;
 
     <h1><?= '<?= ' ?>Html::encode($this->title) ?></h1>
 
+    <?= "<?php " ?>$form = ActiveForm::begin(); ?>
+
     <?= '<?= ' ?>$this->render('_form', [
         'model' => $model,
     ]) ?>
+
+    <div class="form-group">
+        <?= "<?= " ?>Html::submitButton(<?= $generator->generateString('Записать') ?>, ['class' => 'btn btn-success']) ?>
+    </div>
+
+    <?= "<?php " ?>ActiveForm::end(); ?>
 
 </div>

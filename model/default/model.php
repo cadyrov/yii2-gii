@@ -84,20 +84,20 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
     public static function getTypeMap()
     {
         $map = [
-            ['id' => self::TYPE_A, 'name' => 'A'],
-            ['id' => self::TYPE_B, 'name' => 'B'],
+            self::TYPE_A => 'A',
+            self::TYPE_B => 'B',
         ];
         return $map;
     }
 
-    public static function getTipeById($id)
+    public static function getTypeById($id)
     {
-        return ArrayHelper::getValue($id,self::getTypeMap());
+        return ArrayHelper::getValue(self::getTypeMap(), $id);
     }
 
-    public static function getXXXMap($id)
+    public static function map()
     {
-        return ArrayHelper::map(self::query(), 'id', 'name');
+        return ArrayHelper::map(self::find()->all(), 'id', 'name');
     }
 
     //rule custom
