@@ -13,6 +13,7 @@ echo "<?php\n";
 
 use yii\helpers\Html;
 use kartik\datetime\DateTimePicker;
+use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model <?= ltrim($generator->modelClass, '\\') ?> */
 ?>
