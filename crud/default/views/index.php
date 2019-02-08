@@ -214,6 +214,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
 			]); ?>
 		<?= '<?= ' ?>$this->render('_form', [
 			'model' => $model,
+			'form' => $form,
 		]) ?>
 		<div class="form-group">
 			<?= "<?= " ?>Html::submitButton(<?= $generator->generateString('Добавить') ?>, ['class' => 'btn btn-success']) ?>
