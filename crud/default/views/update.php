@@ -25,6 +25,7 @@ use yii\widgets\ActiveForm;
 
     <?= '<?= ' ?>$this->render('_form', [
         'model' => $model,
+        'form' => $form,
     ]) ?>
 
     <div class="form-group">
