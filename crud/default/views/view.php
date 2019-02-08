@@ -25,6 +25,7 @@ $this->title = $model-><?= $generator->getNameAttribute() ?>;
 
     <h1><?= "<?= " ?>Html::encode($this->title) ?></h1>
 
+			<?= "<?php " ?>
             $form = ActiveForm::begin([
 				'action' =>['/<?= $cname?>/upload/'],
 				'options' => ['enctype' => 'multipart/form-data','class' => 'form-inline']
@@ -39,6 +40,7 @@ $this->title = $model-><?= $generator->getNameAttribute() ?>;
 				]
 			);
             ActiveForm::end();
+			?>
 
     <?= "<?= " ?>DetailView::widget([
         'model' => $model,
