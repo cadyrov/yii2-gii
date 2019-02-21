@@ -16,7 +16,7 @@
         "kartik-v/yii2-widgets": "*",
         "moonlandsoft/yii2-phpexcel": "*",
         "budyaga/yii2-cropper": "*",
-        "budyaga/yii2-users": "*",
+        "budyaga/yii2-users": "*"
     },
     "autoload": {
         "psr-4": {
