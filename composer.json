@@ -17,9 +17,6 @@
         "moonlandsoft/yii2-phpexcel": "*",
         "budyaga/yii2-cropper": "*",
         "budyaga/yii2-users": "*",
-        "myclabs/deep-copy": "^1.8",
-        "mpdf/mpdf": "^7.1",
-        "vkcom/vk-php-sdk": "^0.2.0"
     },
     "autoload": {
         "psr-4": {
