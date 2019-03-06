@@ -102,7 +102,8 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
 
     //rule custom
     ['type', 'in', 'range' => self::getTypeArray()],
-    [['a', 'b'], 'required', 'when' => function ($data) {
+
+    [['a', 'b'], 'validateNumber', 'when' => function ($data) {
         if ($data->a == null && $data->b == null && $data->tnved == null) {
             return true;
         }
@@ -110,6 +111,22 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
     }, 'whenClient' => "function (attribute, value) {
         return $('#a').val() == '' && $('#b').val() == '';
     }", 'message' => 'Необходимо заполнить хотя бы одно из полей a, b],
+
+
+
+    [['a', 'b'], 'validateNumber']
+
+    public function validateNumber($attribute, $params)
+	{
+		$dd = Deal::find()->where('deal_id <> :dl and number = :num',[
+			'dl' => $this->deal_id,
+			'num' => $this->number
+		])->one();
+		if ($dd) {
+			$this->addError($attribute, 'Такой номер уже зарезервирован');
+		}
+	}
+
 
 */
 
