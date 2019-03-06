@@ -239,7 +239,7 @@ class Generator extends \yii\gii\Generator
             return "\$form->field(\$model, '$attribute')->textarea(['rows' => 4])";
         }
 
-        if ($column->type === 'datetime') {
+        if ($column->type === 'datetime' || $column->type === 'timestamp') {
             return "
                  \$form->field(\$model, '$attribute')	->widget(DateTimePicker::classname(),
 								[
@@ -256,6 +256,7 @@ class Generator extends \yii\gii\Generator
 						]);
             ";
         }
+
 
         if (preg_match('/^(password|pass|passwd|passcode)$/i', $column->name)) {
             $input = 'passwordInput';
@@ -296,7 +297,7 @@ class Generator extends \yii\gii\Generator
             return "\$form->field(\$model, '$attribute')->checkbox()";
         }
 
-        if ($column->type === 'datetime') {
+        if ($column->type === 'datetime' || $column->type === 'timestamp') {
             return "
                  \$form->field(\$model, '$attribute')	->widget(DateTimePicker::classname(),
 								[
