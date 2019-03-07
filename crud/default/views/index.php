@@ -61,7 +61,6 @@ $this->title = <?= $generator->generateString(Inflector::pluralize(Inflector::ca
 						'data-pjax' => '0',
 						'title' => 'Скачать',
                     ]);
-			echo '</div><div class = "col-lg-3">';
 			$form = ActiveForm::begin([
 				'action' =>['/<?= $pth?>/uploadlist/'],
 				'options' => ['enctype' => 'multipart/form-data','class' => 'form-inline']
@@ -77,7 +76,6 @@ $this->title = <?= $generator->generateString(Inflector::pluralize(Inflector::ca
 					'showUpload' => false
 				]
 			]);
-			echo '</div><div class = "col-lg-1">';
 			echo Html::submitButton(
 					'Загрузить',
 					[
