@@ -45,16 +45,15 @@ $this->title = <?= $generator->generateString(Inflector::pluralize(Inflector::ca
 ?>
 
     <p>
-		<div class = "col-lg-12">
-			<div class = "col-lg-1">
+
         <?= "<?php " ?>echo Html::a('Добавить', ['#'], [
                         'class' => 'btn btn-success',
                         'data-target' => '#add<?= $pth?>',
 						'data-toggle' => 'modal',
 						'title' => 'Добавить',
                     ]);
-			echo '</div><div class = "col-lg-1">';
-
+			?>
+		<?= "<?php " ?>
 			echo Html::a('', ['/<?= $pth?>/downloadlist/'], [
                         'class' => 'glyphicon glyphicon-download',
                         'data-target' => '#down<?= $pth?>',
@@ -89,8 +88,6 @@ $this->title = <?= $generator->generateString(Inflector::pluralize(Inflector::ca
 					]
 				);
 			ActiveForm::end(); ?>
-			</div>
-		</div>
     </p>
 
 

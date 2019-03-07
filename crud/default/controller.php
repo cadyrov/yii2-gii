@@ -64,7 +64,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
                 'only' => ['index','view','create','delete','update','downloadlist','uploadlist','download','upload'],
                 'rules' => [
                     [
-                        'actions' => ['index','view','create','delete','update','download','upload'],
+                        'actions' => ['index','view','create','delete','update','downloadlist','uploadlist','download','upload'],
                         'allow' => true,
                         'roles' => ['<?= $pth?>'],
                     ],
@@ -247,6 +247,7 @@ if (count($pks) === 1) {
                 }
 
                 if (is_array($data) && count($data) > 0) {
+					<?= $modelClass ?>::deleteAll();
                     foreach ($data as $n => $m) {
 						if ($m != null && $this->issetParams($m) == self::RES_TRUE) {
 							$res .= $this->updateRecord($m);
@@ -277,6 +278,9 @@ if (count($pks) === 1) {
                 if ($model == null) {
                     $model = new <?= $modelClass ?>();
                 }
+				if($v['<?= $pks[0]?>']){
+					$model-><?= $pks[0]?> = $v['<?= $pks[0]?>'];
+				}
                 $model->setAttributes($v);
                 if ($model->validate()) {
 					<?php
