@@ -251,9 +251,15 @@ if (count($pks) === 1) {
                     foreach ($data as $n => $m) {
 						if ($m != null && $this->issetParams($m) == self::RES_TRUE) {
 							$res .= $this->updateRecord($m);
+							if ($res != null) {
+								break;
+							}
 						} else {
 							foreach($m as $k=>$v){
 								$res .= $this->updateRecord($v);
+								if ($res != null) {
+									break;
+								}
 							}
 						}
 					}
@@ -280,6 +286,8 @@ if (count($pks) === 1) {
                 }
 				if($v['<?= $pks[0]?>']){
 					$model-><?= $pks[0]?> = $v['<?= $pks[0]?>'];
+				} else {
+					unset ($v['<?= $pks[0]?>']);
 				}
                 $model->setAttributes($v);
                 if ($model->validate()) {
