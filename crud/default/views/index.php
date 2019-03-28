@@ -173,6 +173,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
 							'onclick'=>'return confirm("Вы уверены?");',
 							'data-toggle' => 'tooltip',
 							'title' => 'Удалить',
+							'style' => 'color:brown',
 						]
                     );
 					return (Yii::$app->user->can('') ? $res : '');
