@@ -13,10 +13,7 @@
     ],
     "require": {
         "yiisoft/yii2": "~2.0.0",
-        "kartik-v/yii2-widgets": "*",
-        "moonlandsoft/yii2-phpexcel": "*",
-        "budyaga/yii2-cropper": "*",
-        "budyaga/yii2-users": "*"
+        "moonlandsoft/yii2-phpexcel": "*"
     },
     "autoload": {
         "psr-4": {

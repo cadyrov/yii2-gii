@@ -61,6 +61,9 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         return [
             'access' => [
                 'class' => AccessControl::className(),
+				'denyCallback' => function ($rule, $action) {
+                    throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
+                },
                 'only' => ['index','view','create','delete','update','downloadlist','uploadlist','download','upload'],
                 'rules' => [
                     [
@@ -76,28 +79,12 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 
     public function actionIndex()
     {
-		$model = new <?= $modelClass ?>();
-        $upload = new Upload();
-<?php if (!empty($generator->searchModelClass)): ?>
-        $searchModel = new <?= isset($searchModelAlias) ? $searchModelAlias : $searchModelClass ?>();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-            'model' => $model,
-            'upload' => $upload,
-        ]);
-<?php else: ?>
-        $dataProvider = new ActiveDataProvider([
-            'query' => <?= $modelClass ?>::find(),
-        ]);
-
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-            'model' => $model,
-            'upload' => $upload,
-        ]);
-<?php endif; ?>
+		$dataQuery = <?= $modelClass ?>::find();
+        $id = Yii::$app->request->get('id');
+        if ($id) {
+			$dataQuery->where(['id' => $id]);
+		}
+        self::ok($dataQuery->all());
     }
 
     public function actionView(<?= $actionParams ?>)
@@ -110,8 +97,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     public function actionCreate()
     {
         $model = new <?= $modelClass ?>();
-
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+        if ($model->load(Yii::$app->request->post())) {
 			<?php
 			foreach ($tableSchema->columns as $column) {
 				if ($column->type === 'datetime') {
@@ -121,61 +107,73 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 				}
 			}
 			?>
-            $model->save();
+            if (!$model->save()) {
+                self::error($model->getErrors());
+                return;
+            }
+            self::ok($model);
+            return;
         }
-
-        return $this->redirect(['index']);
+        self::error('data not send');
+        return;
     }
+
+    public function actionDelete()
+	{
+		$id = Yii::$app->request->post('id');
+		if (!$id) {
+			self::error('Send id');
+			return;
+		}
+		$model = <?= $modelClass ?>::findOne($id);
+		if (!$model) {
+			self::error('<?= $modelClass ?> not found');
+			return;
+		}
+		if ($model->delete()) {
+			self::ok();
+		} else {
+            self::error($model->getErrors());
+        }
+	}
+
 
     public function actionUpdate(<?= $actionParams ?>)
     {
-        $model = $this->findModel(<?= $actionParams ?>);
-
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-			<?php
-			foreach ($tableSchema->columns as $column) {
-				if ($column->type === 'datetime') {
-					echo 'if ($model->'.$column->name.') {';
-						echo '$model->'.$column->name.' = date("Y-m-d H:i:s",strtotime($model->'.$column->name.'));';
-					echo '}';
-				}
-			}
-			?>
-            $model->save();
-			return $this->redirect(['index']);
+        
+        $id = Yii::$app->request->post('id');
+		if (!$id) {
+			self::error('Send id');
+			return;
+		}
+        $model = $this->findOne($id);
+        if (!$model) {
+			self::error('Model not found');
+			return;
+		}
+        if ($model->account_id !== self::$user->account_id) {
+			self::error('You can`t update this document');
+			return;
+		}
+        $modelNew = new <?= $actionParams ?>();
+        $modelNew->load(Yii::$app->request->post());
+		<?php
+		foreach ($tableSchema->columns as $column) {
+			if ($column->type === 'datetime') {
+                echo '$model->' . $column->name . ' = ($modelNew->'. $column->name . ' date("Y-m-d H:i:s", strtotime($model->'.$column->name.')) ? : null);';
+			} else {
+                echo '$model->' . $column->name . ' = $modelNew->'. $column->name . ';';
+            }
+		}
+		?>
+        if ($model->save()) {
+            self::ok($model);
+            return;
         }
-		return $this->render('update', [
-            'model' => $model,
-        ]);
-
+        self::error($model->getErrors());
     }
 
-    public function actionDelete(<?= $actionParams ?>)
-    {
-        $this->findModel(<?= $actionParams ?>)->delete();
-
-        return $this->redirect(['index']);
-    }
-
-    protected function findModel(<?= $actionParams ?>)
-    {
-<?php
-if (count($pks) === 1) {
-    $condition = '$id';
-} else {
-    $condition = [];
-    foreach ($pks as $pk) {
-        $condition[] = "'$pk' => \$$pk";
-    }
-    $condition = '[' . implode(', ', $condition) . ']';
-}
-?>
-        if (($model = <?= $modelClass ?>::findOne(<?= $condition ?>)) !== null) {
-            return $model;
-        }
-
-        throw new NotFoundHttpException(<?= $generator->generateString('The requested page does not exist.') ?>);
-    }
+    
 
     public function actionDownloadlist()
     {
@@ -236,14 +234,16 @@ if (count($pks) === 1) {
                 }
                 $model->file->saveAs($path.$fileName);
                 if (!file_exists($path.$fileName)) {
-                    die('не удалось сохранить файл');
+                    self::error('не удалось сохранить файл');
+                    return
                 }
 				ob_end_clean();
                 $data =Excel::import($path.$fileName,
                     ['setFirstRecordAsKeys' => true,
                     'setIndexSheetByName' => true,]);
                 if (!is_array($data)) {
-                    die('не удалось разобрать файл');
+                    self::error('не удалось разобрать файл');
+                    return
                 }
 
                 if (is_array($data) && count($data) > 0) {
@@ -264,15 +264,16 @@ if (count($pks) === 1) {
 						}
 					}
                 } else {
-					return print_r(serialize($data));
+					return self::error(serialize($data));
 				}
             } else {
-				return print_r(serialize($model->getErrors()));
+				return self::error(serialize($model->getErrors()));
 			}
         } else {
 			return 'is no post';
 		}
-        return $this->redirect(['index','message'=>serialize($res)]);
+        self::ok($res);
+        return;
     }
 
     private function updateRecord($v){
@@ -363,7 +364,7 @@ if (count($pks) === 1) {
 			} else {
 				//error code
             }
-			return $this->redirect(['view', 'id' => '$owner-><?= $pks[0]?>']);
+            return self::ok($owner);
         }
     }
 
@@ -388,13 +389,13 @@ if (count($pks) === 1) {
 					readfile($path);
 					exit;
 				}else{
-					print_r('Файла не существует в хранилище');
+					return self::error('Файла не существует в хранилище');
 				}
 			}else{
-				print_r('Файл не найден в таблице');
+				return self::error('Файл не найден в таблице');
 			}
 		}else{
-			print_r('Не передан ид файла');
+			return self::error('Не передан ид файла');
 		}
 	}
 }
