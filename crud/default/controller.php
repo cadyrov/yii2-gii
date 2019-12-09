@@ -87,13 +87,6 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         self::ok($dataQuery->all());
     }
 
-    public function actionView(<?= $actionParams ?>)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel(<?= $actionParams ?>),
-        ]);
-    }
-
     public function actionCreate()
     {
         $model = new <?= $modelClass ?>();
@@ -138,9 +131,8 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 	}
 
 
-    public function actionUpdate(<?= $actionParams ?>)
+    public function actionUpdate()
     {
-        
         $id = Yii::$app->request->post('id');
 		if (!$id) {
 			self::error('Send id');
@@ -155,14 +147,14 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 			self::error('You can`t update this document');
 			return;
 		}
-        $modelNew = new <?= $actionParams ?>();
+        $modelNew = new <?= $modelClass ?>();
         $modelNew->load(Yii::$app->request->post());
 		<?php
 		foreach ($tableSchema->columns as $column) {
 			if ($column->type === 'datetime') {
-                echo '$model->' . $column->name . ' = ($modelNew->'. $column->name . ' date("Y-m-d H:i:s", strtotime($model->'.$column->name.')) ? : null);';
+                echo '$model->' . $column->name . ' = ($modelNew->'. $column->name . ' date("Y-m-d H:i:s", strtotime($model->'.$column->name.')) ? : null); ';
 			} else {
-                echo '$model->' . $column->name . ' = $modelNew->'. $column->name . ';';
+                echo '$model->' . $column->name . ' = $modelNew->'. $column->name . '; ';
             }
 		}
 		?>
@@ -389,13 +381,13 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 					readfile($path);
 					exit;
 				}else{
-					return self::error('Файла не существует в хранилище');
+					return self::error('file don`t exist in store');
 				}
 			}else{
-				return self::error('Файл не найден в таблице');
+				return self::error('file not found ');
 			}
 		}else{
-			return self::error('Не передан ид файла');
+			return self::error('Sent id');
 		}
 	}
 }
