@@ -115,9 +115,9 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 			self::error('Send id');
 			return;
 		}
-		$model = <?= $modelClass ?>::findOne($id);
+		$model = $this->getOne($id);
 		if (!$model) {
-			self::error('<?= $modelClass ?> not found');
+			self::error('<?= $modelClass ?> not found with id: ' . $id);
 			return;
 		}
 		if ($model->delete()) {
@@ -135,7 +135,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 			self::error('Send id');
 			return;
 		}
-        $model = $this->findOne($id);
+        $model = $this->getOne($id);
         if (!$model) {
 			self::error('Model not found');
 			return;
@@ -145,7 +145,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 			return;
 		}
         $modelNew = new <?= $modelClass ?>();
-        $modelNew->load(Yii::$app->request->post());
+        $modelNew->setAttributes(Yii::$app->request->post());
 		<?php
 		foreach ($tableSchema->columns as $column) {
 			if ($column->type === 'datetime') {
@@ -163,6 +163,14 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     }
 
     
+    private function getOne($id) {
+        $md = <?= $modelClass ?>::findOne($id);
+        if (!$md || $md->account_id != self::$user->account_id) {
+            self::error("Модель с ид " . $id . " не найдена");
+            return;
+        }
+        return $md;
+    }
 
     public function actionDownloadlist()
     {
