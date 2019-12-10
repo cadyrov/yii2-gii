@@ -90,24 +90,21 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     public function actionCreate()
     {
         $model = new <?= $modelClass ?>();
-        if ($model->load(Yii::$app->request->post())) {
-			<?php
-			foreach ($tableSchema->columns as $column) {
-				if ($column->type === 'datetime') {
-					echo 'if ($model->'.$column->name.') {';
-						echo '$model->'.$column->name.' = date("Y-m-d H:i:s",strtotime($model->'.$column->name.'));';
-					echo '}';
-				}
-			}
-			?>
-            if (!$model->save()) {
-                self::error($model->getErrors());
-                return;
-            }
-            self::ok($model);
+        $model->setAttributes(Yii::$app->request->post());
+	<?php
+	foreach ($tableSchema->columns as $column) {
+		if ($column->type === 'datetime') {
+			echo 'if ($model->'.$column->name.') {';
+				echo '$model->'.$column->name.' = date("Y-m-d H:i:s",strtotime($model->'.$column->name.'));';
+			echo '}';
+		}
+	}
+	?>
+        if (!$model->save()) {
+            self::error($model->getErrors());
             return;
         }
-        self::error('data not send');
+        self::ok($model);
         return;
     }
 
