@@ -121,7 +121,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 			return;
 		}
 		if ($model->delete()) {
-			self::ok();
+			return self::ok();
 		} else {
             self::error($model->getErrors());
         }
