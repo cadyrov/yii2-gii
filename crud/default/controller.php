@@ -76,7 +76,23 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         ];
     }
 
-
+    /**
+    * @OA\Get(
+    *    tags={"<?= $modelClass ?>"},
+    *    path="/<?php echo mb_strtolower($modelClass) ?>",
+    *    summary="list <?php echo mb_strtolower($modelClass) ?>s",
+    *    @OA\Response(
+    *        response=200,
+    *        description="OK",
+    *        @OA\JsonContent(
+    *            type="array",
+    *            @OA\Items(ref="#/components/schemas/<?= $modelClass ?>")
+    *         )
+    *    ),
+    *    security={{"api_key":{"PHPSESSID"}}}
+    * )
+    *
+    */
     public function actionIndex()
     {
 		$dataQuery = <?= $modelClass ?>::find();
@@ -87,6 +103,25 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         self::ok($dataQuery->all());
     }
 
+    /**
+    * @OA\Post(
+    *    tags={"<?= $modelClass ?>"},
+    *    path="/<?php echo mb_strtolower($modelClass) ?>/create",
+    *    summary="create new  <?php echo mb_strtolower($modelClass) ?> ",
+    *    @OA\RequestBody(
+    *        @OA\MediaType(
+    *            mediaType="application/json",
+    *            @OA\Schema(ref="#/components/schemas/<?= $modelClass ?>")
+    *          )
+    *     ),
+    *    @OA\Response(
+    *        response=200,
+    *        description="OK",
+    *        @OA\JsonContent(ref="#/components/schemas/<?= $modelClass ?>")
+    *    ),
+    *    security={{"api_key":{"PHPSESSID"}}}
+    * )
+    */
     public function actionCreate()
     {
         $model = new <?= $modelClass ?>();
@@ -108,6 +143,28 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         return;
     }
 
+    /**
+    * @OA\Delete(
+    *     path="/<?php echo mb_strtolower($modelClass) ?>/delete",
+    *     summary="Deletes a <?php echo mb_strtolower($modelClass) ?>",
+    *     tags={"<?= $modelClass ?>"},
+    *     @OA\Parameter(
+    *         description="<?= $modelClass ?> id to delete",
+    *         in="query",
+    *         name="id",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer",
+    *             format="int64"
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="OK",
+    *     ),
+    *     security={{"api_key":{"PHPSESSID"}}}
+    * )
+    */
     public function actionDelete()
 	{
 		$id = Yii::$app->request->post('id');
@@ -128,6 +185,25 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 	}
 
 
+    /**
+    * @OA\Post(
+    *    tags={"<?= $modelClass ?>"},
+    *    path="/<?php echo mb_strtolower($modelClass) ?>/update",
+    *    summary="update new  <?php echo mb_strtolower($modelClass) ?> ",
+    *    @OA\RequestBody(
+    *        @OA\MediaType(
+    *            mediaType="application/json",
+    *            @OA\Schema(ref="#/components/schemas/<?= $modelClass ?>")
+    *          )
+    *     ),
+    *    @OA\Response(
+    *        response=200,
+    *        description="OK",
+    *        @OA\JsonContent(ref="#/components/schemas/<?= $modelClass ?>")
+    *    ),
+    *    security={{"api_key":{"PHPSESSID"}}}
+    * )
+    */
     public function actionUpdate()
     {
         $id = Yii::$app->request->post('id');
@@ -162,7 +238,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         self::error($model->getErrors());
     }
 
-    
+
     private function getOne($id) {
         $md = <?= $modelClass ?>::findOne($id);
         if (!$md || $md->account_id != self::$user->account_id) {
