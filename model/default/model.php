@@ -13,7 +13,8 @@
 /* @var $labels string[] list of attribute labels (name => label) */
 /* @var $rules string[] list of validation rules */
 /* @var $relations array list of relations (name => relation declaration) */
-
+$tableSchema = $generator->getTableSchema();
+$required = "";
 echo "<?php\n";
 ?>
 
@@ -22,6 +23,27 @@ namespace <?= $generator->ns ?>;
 use Yii;
 use yii\helpers\ArrayHelper;
 
+/**
+* @OA\Schema(
+*     description="<?= $className ?>",
+*     type="object",
+*     title="<?= $className ?> model",
+<?php
+foreach ($tableSchema->columns as $column) {
+    echo
+        '*     @OA\Property(
+        *         property="'.$column->name.'",
+        *         type="' . ($column->type === ('integer' || 'decimal' || 'float') ? 'integer' : 'string') . '"
+        *     ),
+        ';
+    if ($column->allowNull == false) {
+        $required .= ' "' . $column->name . '"';
+    }
+}
+?>
+* *     required={<?= $required ?>},
+* )
+*/
 class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . "\n" ?>
 {
 
