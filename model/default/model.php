@@ -37,7 +37,7 @@ foreach ($tableSchema->columns as $column) {
         *     ),
         ';
     if ($column->allowNull == false) {
-        $required .= ' "' . $column->name . '"';
+        $required .= (mb_strlen($required) > 0 ?' ,"' . $column->name . '"' :' "' . $column->name . '"' );
     }
 }
 ?>
