@@ -200,6 +200,12 @@ class Generator extends \yii\gii\Generator
         return '';
     }
 
+    public function getSchema($tableName)
+    {
+        $db = $this->getDbConnection();
+        return ($db ? $db->getTableSchema($tableName) : null);
+    }
+
     /**
      * @inheritdoc
      */
