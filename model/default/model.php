@@ -13,7 +13,7 @@
 /* @var $labels string[] list of attribute labels (name => label) */
 /* @var $rules string[] list of validation rules */
 /* @var $relations array list of relations (name => relation declaration) */
-$tableSchema = $generator->getTableSchema();
+$tableSchema = $generator->getSchema($generator->generateTableName($tableName));
 $required = "";
 echo "<?php\n";
 ?>
