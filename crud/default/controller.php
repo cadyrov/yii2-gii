@@ -95,11 +95,11 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     */
     public function actionIndex()
     {
-		$dataQuery = <?= $modelClass ?>::find();
+	$dataQuery = <?= $modelClass ?>::find()->andWhere(['account_id' => self::$user->account_id]);
         $id = Yii::$app->request->get('id');
         if ($id) {
-			$dataQuery->where(['id' => $id]);
-		}
+		$dataQuery->where(['id' => $id]);
+	}
         self::ok($dataQuery->all());
     }
 
