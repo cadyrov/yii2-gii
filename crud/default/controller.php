@@ -126,6 +126,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     {
         $model = new <?= $modelClass ?>();
         $model->setAttributes(Yii::$app->request->post());
+	$model->account_id = self::$user->account_id;
 	<?php
 	foreach ($tableSchema->columns as $column) {
 		if ($column->type === 'datetime') {
