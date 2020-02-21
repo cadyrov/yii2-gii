@@ -81,6 +81,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     *    tags={"<?= $modelClass ?>"},
     *    path="/<?php echo mb_strtolower($modelClass) ?>",
     *    summary="list <?php echo mb_strtolower($modelClass) ?>s",
+    *    description="find <?php echo mb_strtolower($modelClass) ?>",
     *    @OA\Response(
     *        response=200,
     *        description="OK",
@@ -107,7 +108,8 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     * @OA\Post(
     *    tags={"<?= $modelClass ?>"},
     *    path="/<?php echo mb_strtolower($modelClass) ?>/create",
-    *    summary="create new  <?php echo mb_strtolower($modelClass) ?> ",
+    *    summary="create  <?php echo mb_strtolower($modelClass) ?> ",
+    *    description="create new <?php echo mb_strtolower($modelClass) ?>",
     *    @OA\RequestBody(
     *        @OA\MediaType(
     *            mediaType="application/json",
@@ -147,7 +149,8 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     /**
     * @OA\Delete(
     *     path="/<?php echo mb_strtolower($modelClass) ?>/delete",
-    *     summary="Deletes a <?php echo mb_strtolower($modelClass) ?>",
+    *     summary="Deletes <?php echo mb_strtolower($modelClass) ?>",
+    *    description="delete  <?php echo mb_strtolower($modelClass) ?>",
     *     tags={"<?= $modelClass ?>"},
     *     @OA\Parameter(
     *         description="<?= $modelClass ?> id to delete",
@@ -190,7 +193,8 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     * @OA\Post(
     *    tags={"<?= $modelClass ?>"},
     *    path="/<?php echo mb_strtolower($modelClass) ?>/update",
-    *    summary="update new  <?php echo mb_strtolower($modelClass) ?> ",
+    *    summary="update  <?php echo mb_strtolower($modelClass) ?> ",
+    *    description="update <?php echo mb_strtolower($modelClass) ?>",
     *    @OA\RequestBody(
     *        @OA\MediaType(
     *            mediaType="application/json",

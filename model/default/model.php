@@ -25,15 +25,15 @@ use yii\helpers\ArrayHelper;
 
 /**
 * @OA\Schema(
-*     description="<?= $className ?>",
+*     description="<?= $className ?> model",
 *     type="object",
-*     title="<?= $className ?> model",
+*     title="<?= $className ?> ",
 <?php
 foreach ($tableSchema->columns as $column) {
     echo
         '*     @OA\Property(
         *         property="'.$column->name.'",
-        *         type="' . ($column->type === ('integer' || 'decimal' || 'float') ? 'integer' : 'string') . '"
+        *         type="' . ( ($column->type == 'integer' || $column->type == 'decimal' || $column->type == 'float') ? 'integer' : 'string') . '"
         *     ),
         ';
     if ($column->allowNull == false) {
