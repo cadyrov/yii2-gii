@@ -32,7 +32,8 @@ use yii\helpers\ArrayHelper;
 foreach ($tableSchema->columns as $column) {
     echo
         '*     @OA\Property(
-        *         property="'.$column->name.'",
+        *         property="' . $column->name . '",
+        *         description="' . $column->name  . '"   
         *         type="' . ( ($column->type == 'integer' || $column->type == 'decimal' || $column->type == 'float') ? 'integer' : 'string') . '"
         *     ),
         ';
