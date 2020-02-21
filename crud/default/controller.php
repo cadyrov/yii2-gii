@@ -96,11 +96,11 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     */
     public function actionIndex()
     {
-	$dataQuery = <?= $modelClass ?>::find()->andWhere(['account_id' => self::$user->account_id]);
+	    $dataQuery = <?= $modelClass ?>::find()->andWhere(['account_id' => self::$user->account_id]);
         $id = Yii::$app->request->get('id');
         if ($id) {
-		$dataQuery->where(['id' => $id]);
-	}
+		    $dataQuery->where(['id' => $id]);
+	    }
         self::ok($dataQuery->all());
     }
 
@@ -128,7 +128,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     {
         $model = new <?= $modelClass ?>();
         $model->setAttributes(Yii::$app->request->post());
-	$model->account_id = self::$user->account_id;
+	    $model->account_id = self::$user->account_id;
 	<?php
 	foreach ($tableSchema->columns as $column) {
 		if ($column->type === 'datetime') {
@@ -139,11 +139,9 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 	}
 	?>
         if (!$model->save()) {
-            self::error($model->getErrors());
-            return;
+            return self::error($model->getErrors());
         }
-        self::ok($model);
-        return;
+        return self::ok($model);
     }
 
     /**
@@ -213,17 +211,14 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     {
         $id = Yii::$app->request->post('id');
 		if (!$id) {
-			self::error('Send id');
-			return;
+            return self::error('Send id');
 		}
         $model = $this->getOne($id);
         if (!$model) {
-			self::error('Model not found');
-			return;
+            return self::error('Model not found');
 		}
         if ($model->account_id !== self::$user->account_id) {
-			self::error('You can`t update this document');
-			return;
+			return self::error('You can`t update this document');
 		}
         $modelNew = new <?= $modelClass ?>();
         $modelNew->setAttributes(Yii::$app->request->post());
@@ -237,18 +232,16 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 		}
 		?>
         if ($model->save()) {
-            self::ok($model);
-            return;
+            return self::ok($model);
         }
-        self::error($model->getErrors());
+        return self::error($model->getErrors());
     }
 
 
     private function getOne($id) {
         $md = <?= $modelClass ?>::findOne($id);
         if (!$md || $md->account_id != self::$user->account_id) {
-            self::error("Модель с ид " . $id . " не найдена");
-            return;
+            return self::error("Модель с ид " . $id . " не найдена");
         }
         return $md;
     }
@@ -257,10 +250,10 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     {
         $table = <?= $modelClass ?>::tableName();
 		ob_end_clean();
-		$query=new Query;
+		$query = new Query;
 		$query->select('*')
 		->from($table );
-		$resarr=$query->all();
+		$resarr = $query->all();
 
         <?php
             $columns = "[";
