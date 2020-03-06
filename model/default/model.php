@@ -31,12 +31,12 @@ use yii\helpers\ArrayHelper;
 <?php
 foreach ($tableSchema->columns as $column) {
     echo
-        '*     @OA\Property(
-        *         property="' . $column->name . '",
-        *         description="' . $column->name  . '",   
-        *         type="' . ( ($column->type == 'integer' || $column->type == 'decimal' || $column->type == 'float') ? 'integer' : 'string') . '"
-        *     ),
-        ';
+'*     @OA\Property(
+*         property="' . $column->name . '",
+*         description="' . $column->name  . '",   
+*         type="' . ( ($column->type == 'integer' || $column->type == 'decimal' || $column->type == 'float') ? 'integer' : 'string') . '"
+*     ),
+';
     if ($column->allowNull == false) {
         $required .= (mb_strlen($required) > 0 ?' ,"' . $column->name . '"' :' "' . $column->name . '"' );
     }
