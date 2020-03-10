@@ -169,7 +169,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     */
     public function actionDelete()
 	{
-		$id = Yii::$app->request->post('id');
+		$id = Yii::$app->request->get('id');
 		if (!$id) {
 			self::error('Send id');
 			return;
