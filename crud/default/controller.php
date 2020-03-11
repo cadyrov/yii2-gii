@@ -131,7 +131,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 	    $model->account_id = self::$user->account_id;
 	<?php
 	foreach ($tableSchema->columns as $column) {
-		if ($column->type === 'datetime') {
+		if ($column->type == 'datetime') {
 			echo 'if ($model->'.$column->name.') {';
 				echo '$model->'.$column->name.' = date("Y-m-d H:i:s", strtotime($model->'.$column->name.'));';
 			echo '}';
@@ -147,7 +147,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     /**
     * @OA\Delete(
     *     path="/<?php echo mb_strtolower($modelClass) ?>/delete",
-    *     summary="Deletes <?php echo mb_strtolower($modelClass) ?>",
+    *     summary="Delete <?php echo mb_strtolower($modelClass) ?>",
     *    description="delete  <?php echo mb_strtolower($modelClass) ?>",
     *     tags={"<?= $modelClass ?>"},
     *     @OA\Parameter(
@@ -179,6 +179,10 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 			self::error('<?= $modelClass ?> not found with id: ' . $id);
 			return;
 		}
+		if ($model->delete_at) {
+			return self::error('Model deleted is ');
+		}
+		$model->delete_at = date('Y-m-d H:i:s');
 		if ($model->delete()) {
 			return self::ok();
 		} else {
@@ -186,6 +190,51 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         }
 	}
 
+/**
+    * @OA\Get(
+    *     path="/<?php echo mb_strtolower($modelClass) ?>/restore",
+    *     summary="Restore <?php echo mb_strtolower($modelClass) ?>",
+    *    description="restore  <?php echo mb_strtolower($modelClass) ?>",
+    *     tags={"<?= $modelClass ?>"},
+    *     @OA\Parameter(
+    *         description="<?= $modelClass ?> id to delete",
+    *         in="query",
+    *         name="id",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer",
+    *             format="int64"
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="OK",
+    *     ),
+    *     security={{"api_key":{"PHPSESSID"}}}
+    * )
+    */
+    public function actionRestore()
+	{
+		$id = Yii::$app->request->get('id');
+		if (!$id) {
+			self::error('Send id');
+			return;
+		}
+		$model = $this->getOne($id);
+		if (!$model) {
+			self::error('<?= $modelClass ?> not found with id: ' . $id);
+			return;
+		}
+		if (!$model->delete_at) {
+			return self::error('Model not deleted');
+		}
+		$model->delete_at = null;
+		if ($model->update()()) {
+			return self::ok();
+		} else {
+            self::error($model->getErrors());
+        }
+	}
 
     /**
     * @OA\Post(
@@ -218,13 +267,16 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
             return self::error('Model not found');
 		}
         if ($model->account_id !== self::$user->account_id) {
-			return self::error('You can`t update this document');
-		}
+		return self::error('You can`t update this document');
+	}
+	if ($model->delete_at) {
+		return self::error('Model deleted ');
+	}
         $modelNew = new <?= $modelClass ?>();
         $modelNew->setAttributes(Yii::$app->request->post());
 		<?php
 		foreach ($tableSchema->columns as $column) {
-			if ($column->type === 'datetime') {
+			if ($column->type == 'datetime') {
                 echo '$model->' . $column->name . ' = ($modelNew->'. $column->name . ' date("Y-m-d H:i:s", strtotime($model->'.$column->name.')) ? : null); ';
 			} else {
                 echo '$model->' . $column->name . ' = $modelNew->'. $column->name . '; ';
