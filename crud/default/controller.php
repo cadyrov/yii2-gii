@@ -131,7 +131,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 	    $model->account_id = self::$user->account_id;
 	<?php
 	foreach ($tableSchema->columns as $column) {
-		if ($column->type == 'datetime') {
+		if ($column->type == 'datetime' || $column->type == 'timestamp') {
 			echo 'if ($model->'.$column->name.') {';
 				echo '$model->'.$column->name.' = date("Y-m-d H:i:s", strtotime($model->'.$column->name.'));';
 			echo '}';
@@ -276,7 +276,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         $modelNew->setAttributes(Yii::$app->request->post());
 		<?php
 		foreach ($tableSchema->columns as $column) {
-			if ($column->type == 'datetime') {
+			if ($column->type == 'datetime' || $column->type == 'timestamp') {
                 echo '$model->' . $column->name . ' = ($modelNew->'. $column->name . ' date("Y-m-d H:i:s", strtotime($model->'.$column->name.')) ? : null); ';
 			} else {
                 echo '$model->' . $column->name . ' = $modelNew->'. $column->name . '; ';
