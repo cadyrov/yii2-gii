@@ -51,8 +51,8 @@ use yii\web\UploadedFile;
 class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->baseControllerClass) . "\n" ?>
 {
     const RES_TRUE = 10;
-	const RES_FALSE = 20;
-	const RES_NOONE = 30;
+    const RES_FALSE = 20; 
+    const RES_NOONE = 30;
 
     private $error=[];
 
@@ -64,10 +64,10 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 				'denyCallback' => function ($rule, $action) {
                     throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
                 },
-                'only' => ['index','view','create','delete','update','downloadlist','uploadlist','download','upload'],
+                'only' => ['index','view','create','delete','update', 'restore', 'downloadlist','uploadlist','download','upload'],
                 'rules' => [
                     [
-                        'actions' => ['index','view','create','delete','update','downloadlist','uploadlist','download','upload'],
+                        'actions' => ['index','view','create','delete','update', 'restore', 'downloadlist','uploadlist','download','upload'],
                         'allow' => true,
                         'roles' => ['<?= $pth?>'],
                     ],
@@ -96,11 +96,11 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     */
     public function actionIndex()
     {
-	    $dataQuery = <?= $modelClass ?>::find()->andWhere(['account_id' => self::$user->account_id]);
+	$dataQuery = <?= $modelClass ?>::find()->andWhere(['account_id' => self::$user->account_id]);
         $id = Yii::$app->request->get('id');
         if ($id) {
-		    $dataQuery->where(['id' => $id]);
-	    }
+		$dataQuery->where(['id' => $id]);
+	}
         self::ok($dataQuery->all());
     }
 
@@ -131,16 +131,20 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 	    $model->account_id = self::$user->account_id;
 	<?php
 	foreach ($tableSchema->columns as $column) {
+		if ($column->name == 'deleted_at') {
+			continue;	
+		}
 		if ($column->type == 'datetime' || $column->type == 'timestamp') {
-			echo 'if ($model->'.$column->name.') {';
-				echo '$model->'.$column->name.' = date("Y-m-d H:i:s", strtotime($model->'.$column->name.'));';
-			echo '}';
+		echo 'if ($model->'.$column->name.') {';
+		echo '$model->'.$column->name.' = date("Y-m-d H:i:s", strtotime($model->'.$column->name.'));';
+		echo '}';
 		}
 	}
 	?>
         if (!$model->save()) {
             return self::error($model->getErrors());
         }
+	self::createLog(<?php echo "" . mb_strtolower($modelClass) . ""?>, serialize($model));
         return self::ok($model);
     }
 
@@ -179,15 +183,16 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 			self::error('<?= $modelClass ?> not found with id: ' . $id);
 			return;
 		}
-		if ($model->delete_at) {
-			return self::error('Model deleted is ');
+		if ($model->deleted_at) {
+			return self::error('Model deleted');
 		}
-		$model->delete_at = date('Y-m-d H:i:s');
-		if ($model->delete()) {
+		$model->deleted_at = date('Y-m-d H:i:s');
+		if ($model->update()) {
+			self::deleteLog(<?php echo "" . mb_strtolower($modelClass) . ""?>, $id);
 			return self::ok();
 		} else {
-            self::error($model->getErrors());
-        }
+		    self::error($model->getErrors());
+		}
 	}
 
 /**
@@ -225,15 +230,16 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 			self::error('<?= $modelClass ?> not found with id: ' . $id);
 			return;
 		}
-		if (!$model->delete_at) {
+		if (!$model->deleted_at) {
 			return self::error('Model not deleted');
 		}
-		$model->delete_at = null;
+		$model->deleted_at = null;
 		if ($model->update()()) {
+			self::restoreLog(<?php echo "" . mb_strtolower($modelClass) . ""?>, $id);
 			return self::ok();
 		} else {
-            self::error($model->getErrors());
-        }
+		    self::error($model->getErrors());
+		}
 	}
 
     /**
@@ -269,21 +275,25 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         if ($model->account_id !== self::$user->account_id) {
 		return self::error('You can`t update this document');
 	}
-	if ($model->delete_at) {
+	if ($model->deleted_at) {
 		return self::error('Model deleted ');
 	}
         $modelNew = new <?= $modelClass ?>();
         $modelNew->setAttributes(Yii::$app->request->post());
 		<?php
 		foreach ($tableSchema->columns as $column) {
-			if ($column->type == 'datetime' || $column->type == 'timestamp') {
-                echo '$model->' . $column->name . ' = ($modelNew->'. $column->name . ' date("Y-m-d H:i:s", strtotime($model->'.$column->name.')) ? : null); ';
-			} else {
-                echo '$model->' . $column->name . ' = $modelNew->'. $column->name . '; ';
-            }
+		if ($column->name == 'deleted_at') {
+			continue;	
+		}
+		if ($column->type == 'datetime' || $column->type == 'timestamp' &&  $column->name) {
+                	echo '$model->' . $column->name . ' = ($modelNew->'. $column->name . ' date("Y-m-d H:i:s", strtotime($model->'.$column->name.')) ? : null); ';
+		} else {
+                	echo '$model->' . $column->name . ' = $modelNew->'. $column->name . '; ';
+            	}
 		}
 		?>
         if ($model->save()) {
+	    self::updateLog(<?php echo "" . mb_strtolower($modelClass) . ""?>, $id);
             return self::ok($model);
         }
         return self::error($model->getErrors());
