@@ -144,7 +144,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         if (!$model->save()) {
             return self::error($model->getErrors());
         }
-	self::createLog(<?php echo "" . mb_strtolower($modelClass) . ""?>, serialize($model));
+	self::createLog(<?php echo "'" . mb_strtolower($modelClass) . "'"?>, serialize($model));
         return self::ok($model);
     }
 
@@ -188,7 +188,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 		}
 		$model->deleted_at = date('Y-m-d H:i:s');
 		if ($model->update()) {
-			self::deleteLog(<?php echo "" . mb_strtolower($modelClass) . ""?>, $id);
+			self::deleteLog(<?php echo "'" . mb_strtolower($modelClass) . "'"?>, $id);
 			return self::ok();
 		} else {
 		    self::error($model->getErrors());
@@ -235,7 +235,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 		}
 		$model->deleted_at = null;
 		if ($model->update()()) {
-			self::restoreLog(<?php echo "" . mb_strtolower($modelClass) . ""?>, $id);
+			self::restoreLog(<?php echo "'" . mb_strtolower($modelClass) . "'"?>, $id);
 			return self::ok();
 		} else {
 		    self::error($model->getErrors());
@@ -293,7 +293,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 		}
 		?>
         if ($model->save()) {
-	    self::updateLog(<?php echo "" . mb_strtolower($modelClass) . ""?>, $id);
+	    self::updateLog(<?php echo "'" . mb_strtolower($modelClass) . "'"?>, $id);
             return self::ok($model);
         }
         return self::error($model->getErrors());
