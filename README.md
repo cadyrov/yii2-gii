@@ -47,3 +47,5 @@ $config['modules']['gii'] = [
     ],
 ];
 ```
+
+There are reserved fields on generation CRUD - deleted_at
