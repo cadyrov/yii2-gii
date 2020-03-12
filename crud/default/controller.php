@@ -17,6 +17,12 @@ if ($modelClass === $searchModelClass) {
     $searchModelAlias = $searchModelClass . 'Search';
 }
 $tableSchema = $generator->getTableSchema();
+$deletedExists = false;
+foreach ($tableSchema->columns as $column) {
+	if ($column->name == 'deleted_at') {
+		$deletedExists = true;
+	}
+}
 
 /* @var $class ActiveRecordInterface */
 $class = $generator->modelClass;
@@ -64,10 +70,10 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 				'denyCallback' => function ($rule, $action) {
                     throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
                 },
-                'only' => ['index','view','create','delete','update', 'restore', 'downloadlist','uploadlist','download','upload'],
+                'only' => ['index','view','create','delete','update', <?php ($deletedExists ? echo "'restore'," : null)?> 'downloadlist','uploadlist','download','upload'],
                 'rules' => [
                     [
-                        'actions' => ['index','view','create','delete','update', 'restore', 'downloadlist','uploadlist','download','upload'],
+                        'actions' => ['index','view','create','delete','update', <?php ($deletedExists ? echo "'restore'," : null)?> 'downloadlist','uploadlist','download','upload'],
                         'allow' => true,
                         'roles' => ['<?= $pth?>'],
                     ],
@@ -183,17 +189,22 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 			self::error('<?= $modelClass ?> not found with id: ' . $id);
 			return;
 		}
+		<?php if ($deletedExists) { ?>
 		if ($model->deleted_at) {
 			return self::error('Model deleted');
 		}
 		$model->deleted_at = date('Y-m-d H:i:s');
-		if ($model->update()) {
+		if ($model->update()) {';
+		<?php } else { ?>
+		if ($model->delete()) {
+		<?php } ?>
 			self::deleteLog(<?php echo "'" . mb_strtolower($modelClass) . "'"?>, $id);
 			return self::ok();
 		} else {
 		    self::error($model->getErrors());
 		}
 	}
+<?php  if ($deletedExists) {?>
 
 /**
     * @OA\Get(
@@ -241,7 +252,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 		    self::error($model->getErrors());
 		}
 	}
-
+<?php }?>
     /**
     * @OA\Post(
     *    tags={"<?= $modelClass ?>"},
@@ -275,9 +286,11 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         if ($model->account_id !== self::$user->account_id) {
 		return self::error('You can`t update this document');
 	}
+	<?php  if ($deletedExists) {?>
 	if ($model->deleted_at) {
 		return self::error('Model deleted ');
 	}
+	<?php }?>
         $modelNew = new <?= $modelClass ?>();
         $modelNew->setAttributes(Yii::$app->request->post());
 		<?php
