@@ -70,10 +70,10 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 				'denyCallback' => function ($rule, $action) {
                     throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
                 },
-                'only' => ['index','view','create','delete','update', <?php ($deletedExists ? echo "'restore'," : null)?> 'downloadlist','uploadlist','download','upload'],
+                'only' => ['index','view','create','delete','update', <?php echo ($deletedExists ?  "'restore'," : null)?> 'downloadlist','uploadlist','download','upload'],
                 'rules' => [
                     [
-                        'actions' => ['index','view','create','delete','update', <?php ($deletedExists ? echo "'restore'," : null)?> 'downloadlist','uploadlist','download','upload'],
+                        'actions' => ['index','view','create','delete','update', <?php echo ($deletedExists ? "'restore'," : null)?> 'downloadlist','uploadlist','download','upload'],
                         'allow' => true,
                         'roles' => ['<?= $pth?>'],
                     ],
