@@ -194,7 +194,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 			return self::error('Model deleted');
 		}
 		$model->deleted_at = date('Y-m-d H:i:s');
-		if ($model->update()) {';
+		if ($model->update()) {
 		<?php } else { ?>
 		if ($model->delete()) {
 		<?php } ?>
