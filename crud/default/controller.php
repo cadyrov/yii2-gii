@@ -142,7 +142,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 		}
 		if ($column->type == 'datetime' || $column->type == 'timestamp') {
 		echo 'if ($model->'.$column->name.') {';
-		echo '$model->'.$column->name.' = date("Y-m-d H:i:s", strtotime($model->'.$column->name.'));';
+		echo '$model->' . $column->name . ' = ($model->'. $column->name . ' ? date("Y-m-d H:i:s", strtotime($model->'.$column->name.')) : null);';
 		echo '}';
 		}
 	}
@@ -299,7 +299,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 			continue;	
 		}
 		if ($column->type == 'datetime' || $column->type == 'timestamp' &&  $column->name) {
-                	echo '$model->' . $column->name . ' = ($modelNew->'. $column->name . ' date("Y-m-d H:i:s", strtotime($model->'.$column->name.')) ? : null); ';
+                	echo '$model->' . $column->name . ' = ($modelNew->'. $column->name . ' ? date("Y-m-d H:i:s", strtotime($modelNew->'.$column->name.')) : null); ';
 		} else {
                 	echo '$model->' . $column->name . ' = $modelNew->'. $column->name . '; ';
             	}
