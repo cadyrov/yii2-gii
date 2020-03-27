@@ -53,6 +53,7 @@ use yii\filters\AccessControl;
 use moonland\phpexcel\Excel;
 use yii\db\Query;
 use yii\web\UploadedFile;
+use app\controllers\Dictionary;
 
 class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->baseControllerClass) . "\n" ?>
 {
@@ -88,6 +89,35 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     *    path="/<?php echo mb_strtolower($modelClass) ?>",
     *    summary="list <?php echo mb_strtolower($modelClass) ?>s",
     *    description="find <?php echo mb_strtolower($modelClass) ?>",
+    *     @OA\Parameter(
+    *         description="id to find",
+    *         in="query",
+    *         name="id",
+    *         required=false,
+    *         @OA\Schema(
+    *             type="integer",
+    *             format="int64"
+    *         )
+    *     ),
+    *     @OA\Parameter(
+    *         description="query to find",
+    *         in="query",
+    *         name="query",
+    *         required=false,
+    *         @OA\Schema(
+    *             type="string",
+    *         )
+    *     ),
+    *     @OA\Parameter(
+    *         description="page number",
+    *         in="query",
+    *         name="page",
+    *         required=false,
+    *         @OA\Schema(
+    *             type="integer",
+    *             format="int64"
+    *         )
+    *     ),
     *    @OA\Response(
     *        response=200,
     *        description="OK",
@@ -104,10 +134,20 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     {
 	$q = <?= $modelClass ?>::find()->andWhere(['account_id' => self::$user->account_id]);
         $id = Yii::$app->request->get('id');
+	$query = self::getStringToLike(Yii::$app->request->get('query'));
         if ($id) {
 		$q->where(['id' => $id]);
 	}
-        self::ok($q->all());
+	if ($query) {
+            $q->andWhere('lower(name) like :q', ['q' => $query ]);
+        }
+        $cnt = $q->count();
+        $maxpage = ceil($cnt/Dictionary::QUERY_LIMIT);
+        $page = Yii::$app->request->get('page') && Yii::$app->request->get('page') > 0 ? Yii::$app->request->get('page') : 1;
+
+        $q->limit(Dictionary::QUERY_LIMIT);
+        $q->offset(($page-1)*Dictionary::QUERY_LIMIT);
+        self::ok($q->all(), 'success', $cnt, $page, Dictionary::QUERY_LIMIT);
     }
 
     /**
