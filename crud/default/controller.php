@@ -133,6 +133,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     public function actionIndex()
     {
 	$q = <?= $modelClass ?>::find()->andWhere(['account_id' => self::$user->account_id]);
+	$q->orderBy('id asc');
         $id = Yii::$app->request->get('id');
 	$query = self::getStringToLike(Yii::$app->request->get('query'));
         if ($id) {
