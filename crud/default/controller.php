@@ -145,7 +145,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         $cnt = $q->count();
         $maxpage = ceil($cnt/Dictionary::QUERY_LIMIT);
         $page = Yii::$app->request->get('page') && Yii::$app->request->get('page') > 0 ? Yii::$app->request->get('page') : 1;
-
+	$page = $page > $maxpage ? $maxpage : $page ;
         $q->limit(Dictionary::QUERY_LIMIT);
         $q->offset(($page-1)*Dictionary::QUERY_LIMIT);
         self::ok($q->all(), 'success', $cnt, $page, Dictionary::QUERY_LIMIT);
